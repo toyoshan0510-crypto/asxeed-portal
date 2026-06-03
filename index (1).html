@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASXEED ｜ 社内研修ポータル</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500;1,600&family=Shippori+Mincho:wght@600;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#F3F7F4;--white:#fff;--ink:#15241D;--gdeep:#0A3122;--gdeep2:#072117;--green:#147A52;--gbright:#1FB073;--gsoft:#E8F2EC;--line:#DBE6DF;--hair:#EBF1ED;--gold:#A9803A;--muted:#56655C;--faint:#92A097;--done:#147A52;--draft:#A9803A;--todo:#9BA59D;--serif:"Shippori Mincho",serif;--disp:"Cormorant Garamond",serif;--sans:"Noto Sans JP",sans-serif;--mono:ui-monospace,Menlo,monospace}
+  *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+  body{font-family:var(--sans);background:var(--paper);color:var(--ink);font-size:15px;line-height:1.8;overflow-x:hidden}
+  ::selection{background:var(--green);color:#fff}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 40px}
+  /* LOGIN */
+  #login{position:fixed;inset:0;z-index:100;display:flex;background:var(--paper)}
+  .lbrand{flex:1;background:linear-gradient(165deg,var(--gdeep),var(--gdeep2));color:#dfeae3;padding:64px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+  .lbrand .dots{position:absolute;inset:0;opacity:.4;background-image:radial-gradient(circle,rgba(31,176,115,.18) 1px,transparent 1.5px);background-size:26px 26px}
+  .lbrand .seal{position:absolute;right:-160px;bottom:-160px;width:520px;height:520px;opacity:.5}.lbrand .seal circle{fill:none;stroke:rgba(31,176,115,.16)}
+  .lbrand>*{position:relative;z-index:2}
+  .lbrand .emb{display:flex;align-items:center;gap:12px}.lbrand .emb svg{width:38px;height:38px}.lbrand .emb .wm{font-family:var(--disp);font-weight:700;font-size:27px;letter-spacing:.14em;color:#fff}.lbrand .emb .wm i{color:var(--gbright);font-style:normal}
+  .lbrand .en{font-family:var(--mono);font-size:10px;letter-spacing:.4em;color:#7fae95;margin-bottom:24px}
+  .lbrand h2{font-family:var(--serif);font-weight:800;font-size:clamp(30px,3.4vw,46px);color:#fff;line-height:1.25}.lbrand h2 em{font-family:var(--disp);font-style:italic;color:var(--gbright)}
+  .lbrand .bt{font-size:13px;color:#8fb8a3;max-width:360px;margin-top:22px}.lbrand .bot{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:#5f8773}
+  .lform{width:486px;flex-shrink:0;background:var(--paper);display:flex;flex-direction:column;justify-content:center;padding:60px 64px}
+  .lform .k{font-family:var(--mono);font-size:11px;letter-spacing:.34em;color:var(--green);margin-bottom:14px}.lform h1{font-family:var(--serif);font-weight:800;font-size:30px;color:var(--gdeep);margin-bottom:8px}.lform .lsub{font-size:13px;color:var(--muted);margin-bottom:32px}
+  .field{margin-bottom:18px}.field label{display:block;font-size:12px;font-weight:700;color:var(--gdeep);margin-bottom:8px}
+  .field input,.field select{width:100%;padding:15px 17px;border:1px solid var(--line);border-radius:12px;font-family:var(--sans);font-size:15px;background:#fff;transition:.2s;color:var(--ink);appearance:none}
+  .field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23147A52' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 17px center;cursor:pointer}
+  .field input:focus,.field select:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(20,122,82,.12)}
+  .lerr{color:#c0392b;font-size:12.5px;min-height:18px;margin:-4px 0 10px}
+  .lbtn{width:100%;padding:16px;border:none;border-radius:12px;background:var(--green);color:#fff;font-weight:700;font-size:15px;cursor:pointer;transition:.2s;box-shadow:0 14px 30px -12px var(--green);font-family:var(--sans)}.lbtn:hover{background:var(--gbright);transform:translateY(-2px)}
+  .lhint{margin-top:24px;padding:14px 16px;background:var(--gsoft);border:1px solid #d3e6db;border-radius:11px;font-size:11.5px;color:var(--muted);line-height:1.7}.lhint b{color:var(--green)}
+  @media(max-width:820px){.lbrand{display:none}.lform{width:100%;padding:44px 28px}}
+  /* PORTAL */
+  #portal{display:none}
+  nav.top{position:fixed;top:0;left:0;right:0;z-index:60;transition:.35s;padding:16px 0;background:rgba(243,247,244,.85);backdrop-filter:blur(14px);border-bottom:1px solid transparent}
+  nav.top.scr{border-bottom-color:var(--line);padding:12px 0}
+  nav.top .in{display:flex;align-items:center;justify-content:space-between;max-width:1140px;margin:0 auto;padding:0 40px}
+  .logo{display:flex;align-items:center;gap:11px}.logo svg{width:30px;height:30px}.logo .wm{font-family:var(--disp);font-weight:700;font-size:22px;letter-spacing:.13em;color:var(--gdeep)}.logo .wm i{color:var(--gbright);font-style:normal}
+  .nuser{display:flex;align-items:center;gap:16px;font-size:13px}.nuser .nm{color:var(--gdeep);font-weight:700}.nuser .rl{font-family:var(--mono);font-size:10px;color:var(--green);background:var(--gsoft);padding:3px 9px;border-radius:6px}
+  .nuser .out{background:none;border:1px solid var(--line);color:var(--muted);font-size:12px;padding:7px 14px;border-radius:9px;cursor:pointer;font-family:var(--sans)}.nuser .out:hover{border-color:var(--green);color:var(--green)}
+  .welcome{padding:120px 0 24px;position:relative;overflow:hidden}
+  .welcome .bg{position:absolute;inset:0;z-index:0;background:radial-gradient(720px 440px at 82% -10%,rgba(31,176,115,.13),transparent 60%)}
+  .welcome .dots{position:absolute;inset:0;z-index:0;opacity:.5;background-image:radial-gradient(circle,rgba(20,122,82,.07) 1px,transparent 1.5px);background-size:26px 26px;-webkit-mask-image:linear-gradient(180deg,#000,transparent);mask-image:linear-gradient(180deg,#000,transparent)}
+  .welcome .in{position:relative;z-index:2}
+  .welcome .k{font-family:var(--mono);font-size:11px;letter-spacing:.34em;color:var(--green);margin-bottom:14px}
+  .welcome h1{font-family:var(--serif);font-weight:800;font-size:clamp(28px,4.2vw,46px);color:var(--gdeep);line-height:1.2}.welcome h1 .nm{color:var(--green)}
+  .ladder{display:flex;margin-top:30px;background:var(--white);border:1px solid var(--line);border-radius:18px;padding:28px 18px 22px;box-shadow:0 18px 40px -28px rgba(10,49,34,.3)}
+  .step{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;text-align:center}
+  .step:not(:last-child):after{content:"";position:absolute;top:23px;left:50%;width:100%;height:2px;background:var(--line);z-index:0}.step.done:not(:last-child):after{background:var(--green)}
+  .step .dot{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:700;font-size:19px;position:relative;z-index:1;border:2px solid var(--line);background:#fff;color:var(--faint);transition:.25s}
+  .step.unlocked{cursor:pointer}.step.done .dot{background:var(--green);border-color:var(--green);color:#fff}.step.current .dot{border-color:var(--green);color:var(--green);box-shadow:0 0 0 5px rgba(20,122,82,.13)}.step.locked .dot{background:#f1f3f1;color:#c2cac3;border-color:#e6ebe7}.step.viewed .dot{transform:scale(1.12)}
+  .step .lbl{margin-top:13px;font-family:var(--serif);font-size:15px;color:var(--gdeep);font-weight:700}.step.locked .lbl{color:var(--faint)}.step .stt{font-family:var(--mono);font-size:9px;letter-spacing:.1em;margin-top:4px;color:var(--muted)}.step.current .stt{color:var(--green)}.step.viewed .stt{font-weight:700}
+  .pbar{display:flex;align-items:center;gap:22px;margin-top:22px;padding:20px 26px;background:var(--white);border:1px solid var(--line);border-radius:16px;flex-wrap:wrap}
+  .ring{width:64px;height:64px;flex-shrink:0}.ring circle{fill:none;stroke-width:6}.ring .trk{stroke:var(--hair)}.ring .fil{stroke:var(--green);stroke-linecap:round;transition:stroke-dashoffset .6s}.ringnum{font-family:var(--disp);font-weight:700;font-size:19px;fill:var(--gdeep)}
+  .pbar .v{font-family:var(--serif);font-size:16px;color:var(--gdeep)}.pbar .l{font-size:12px;color:var(--muted);margin-top:2px}.pbar .msg{margin-left:auto;font-size:13px;color:var(--muted);max-width:320px}.pbar .msg b{color:var(--green)}
+  section.lib{padding:18px 0 90px}
+  .secttl{font-family:var(--serif);font-size:20px;color:var(--gdeep);margin:34px 0 6px;display:flex;align-items:center;gap:12px}.secttl .badge{font-family:var(--mono);font-size:10px;background:var(--gsoft);color:var(--green);padding:4px 11px;border-radius:7px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(272px,1fr));gap:18px;margin-top:20px}
+  .mcard{background:var(--white);border:1px solid var(--line);border-radius:18px;padding:22px 22px 18px;cursor:pointer;position:relative;overflow:hidden;transition:transform .25s,box-shadow .25s,border-color .25s}
+  .mcard:before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:linear-gradient(90deg,var(--green),var(--gbright));transform:scaleX(0);transform-origin:left;transition:.32s}
+  .mcard:hover{transform:translateY(-6px);box-shadow:0 24px 48px -24px rgba(10,49,34,.34);border-color:#cfe0d5}.mcard:hover:before{transform:scaleX(1)}.mcard.dn{border-color:#cfe6da}.mcard.dn:before{transform:scaleX(1)}
+  .mcard .lyr{font-family:var(--mono);font-size:9.5px;color:var(--faint);letter-spacing:.06em;margin-bottom:9px}.mcard .mt{font-family:var(--serif);font-weight:700;font-size:16.5px;line-height:1.5;margin-bottom:13px;color:var(--gdeep)}
+  .badges{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.b{font-family:var(--mono);font-size:10px;padding:3px 10px;border-radius:6px;letter-spacing:.05em}
+  .b.mode-learn{background:var(--gsoft);color:var(--green);border:1px solid #cfe6da}.b.mode-run{background:#f8f1e4;color:var(--gold);border:1px solid #ecdcc0}.b.s-done{background:var(--gsoft);color:var(--done);font-weight:700}.b.s-draft{background:#faf3e6;color:var(--draft)}.b.s-todo{background:#f1f3f1;color:var(--todo)}
+  .mcard .meta{font-size:11px;color:var(--faint);display:flex;justify-content:space-between;align-items:center;font-family:var(--mono)}.mcard .read{color:var(--done);font-weight:700}
+  .advance{margin-top:36px;background:linear-gradient(135deg,var(--gdeep),var(--gdeep2));color:#fff;border-radius:20px;padding:32px 34px;display:flex;justify-content:space-between;align-items:center;gap:22px;flex-wrap:wrap;position:relative;overflow:hidden}
+  .advance .dots{position:absolute;inset:0;opacity:.3;background-image:radial-gradient(circle,rgba(31,176,115,.25) 1px,transparent 1.5px);background-size:24px 24px}.advance>div{position:relative;z-index:2}.advance .at{font-family:var(--serif);font-size:22px;color:#fff}.advance .as{font-size:13px;color:#9fc4b1;margin-top:7px;max-width:440px}
+  .advance button{position:relative;z-index:2;background:var(--gbright);color:#04231a;font-weight:700;padding:15px 30px;border:none;border-radius:12px;cursor:pointer;font-family:var(--sans);font-size:14px;transition:.2s}.advance button:hover{transform:translateY(-2px)}
+  .flash{margin-top:26px;background:var(--gsoft);border:1px solid var(--green);border-radius:14px;padding:18px 22px;color:var(--gdeep);font-weight:700;display:flex;align-items:center;gap:12px;animation:pop .4s ease}.flash .ic{width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  @keyframes pop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .lockmsg{margin-top:30px;text-align:center;color:var(--muted);font-size:14px;padding:40px;background:var(--white);border:1px dashed #c6dacd;border-radius:18px}
+  footer{background:linear-gradient(165deg,var(--gdeep),var(--gdeep2));color:#cfe1d6;padding:60px 0 38px;text-align:center}
+  footer .fm{font-family:var(--serif);font-size:clamp(22px,3.4vw,30px);color:#fff;margin-bottom:18px}footer .fm em{font-family:var(--disp);font-style:italic;color:var(--gbright)}
+  footer .fmeta{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:#5f8773;border-top:1px solid rgba(255,255,255,.1);padding-top:22px;max-width:600px;margin:22px auto 0}
+  /* overlay / course */
+  .overlay{position:fixed;inset:0;z-index:80;background:var(--paper);overflow-y:auto;opacity:0;visibility:hidden;transform:translateY(24px);transition:.4s cubic-bezier(.2,.7,.2,1)}.overlay.open{opacity:1;visibility:visible;transform:none}
+  .obar{position:sticky;top:0;background:rgba(243,247,244,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:16px 0;z-index:5}.obar .in{max-width:840px;margin:0 auto;padding:0 40px}
+  .back{display:inline-flex;align-items:center;gap:8px;background:none;border:none;color:var(--green);font-size:14px;cursor:pointer;font-family:var(--sans);font-weight:500}
+  .ocontent{max-width:840px;margin:0 auto;padding:44px 40px 90px}
+  .dhead{border-bottom:1px solid var(--line);padding-bottom:22px;margin-bottom:6px}.dhead h1{font-family:var(--serif);font-size:clamp(25px,4vw,34px);font-weight:800;color:var(--gdeep)}.dhead .badges{margin:18px 0 0}
+  /* course step tracker */
+  .ctrack{display:flex;margin:30px 0 6px;background:var(--white);border:1px solid var(--line);border-radius:14px;padding:18px 12px}
+  .cstep{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative}
+  .cstep:not(:last-child):after{content:"";position:absolute;top:16px;left:50%;width:100%;height:2px;background:var(--line)}.cstep.dn:not(:last-child):after{background:var(--green)}
+  .cstep .cd{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:13px;background:#fff;border:2px solid var(--line);color:var(--faint);position:relative;z-index:1}
+  .cstep.dn .cd{background:var(--green);border-color:var(--green);color:#fff}.cstep.cur .cd{border-color:var(--green);color:var(--green);box-shadow:0 0 0 4px rgba(20,122,82,.13)}
+  .cstep .cl{font-size:10.5px;margin-top:9px;color:var(--muted)}.cstep.cur .cl{color:var(--green);font-weight:700}
+  .csec{margin-top:34px;background:var(--white);border:1px solid var(--line);border-radius:18px;padding:26px 28px;position:relative}
+  .csec.locked{opacity:.55}
+  .csec .ch{display:flex;align-items:center;gap:13px;margin-bottom:16px}
+  .csec .cn{font-family:var(--disp);font-weight:700;font-style:italic;font-size:30px;color:var(--gbright);line-height:1}
+  .csec .ct{font-family:var(--serif);font-size:19px;color:var(--gdeep);font-weight:700}
+  .csec .ctag{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--faint)}
+  .videoframe{aspect-ratio:16/9;border-radius:13px;background:linear-gradient(150deg,var(--gdeep),var(--gdeep2));display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;margin-bottom:16px}
+  .videoframe .dots{position:absolute;inset:0;opacity:.3;background-image:radial-gradient(circle,rgba(31,176,115,.3) 1px,transparent 1.5px);background-size:22px 22px}
+  .videoframe .play{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;position:relative;z-index:2}
+  .videoframe .play:after{content:"";border-left:18px solid #fff;border-top:11px solid transparent;border-bottom:11px solid transparent;margin-left:5px}
+  .videoframe .dur{position:absolute;bottom:12px;right:14px;z-index:2;font-family:var(--mono);font-size:11px;color:#cfe1d6;background:rgba(0,0,0,.3);padding:3px 9px;border-radius:6px}
+  .chaps{list-style:none}.chaps li{padding:9px 0 9px 26px;position:relative;font-size:13.5px;color:#3a463f;border-top:1px solid var(--hair)}.chaps li:first-child{border-top:none}
+  .chaps li:before{content:counter(c);counter-increment:c;position:absolute;left:0;top:9px;font-family:var(--mono);font-size:11px;color:var(--green);font-weight:700}.chaps{counter-reset:c}
+  .cribcard{background:linear-gradient(160deg,#fff,#fbfdfb);border:1.5px solid var(--green);border-radius:14px;padding:22px 24px;position:relative;box-shadow:0 12px 30px -18px rgba(10,49,34,.4)}
+  .cribcard .crh{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--green);border-bottom:1px solid var(--gsoft);padding-bottom:10px;margin-bottom:12px;display:flex;justify-content:space-between}
+  .cribcard ul{list-style:none}.cribcard li{padding:6px 0;font-size:14px;color:var(--gdeep);font-weight:500}
+  .abox{background:var(--gsoft);border:1px solid #d3e6db;border-left:3px solid var(--green);border-radius:12px;padding:18px 20px;font-size:14.5px;color:var(--gdeep)}.abox b{color:var(--green)}
+  .note{font-size:11.5px;color:var(--faint);margin-top:9px;font-family:var(--mono)}
+  .cbtn{margin-top:18px;font-family:var(--sans);font-size:14px;font-weight:700;padding:13px 26px;border-radius:11px;border:none;cursor:pointer;transition:.2s;background:var(--green);color:#fff;box-shadow:0 10px 24px -12px var(--green)}
+  .cbtn:hover{background:var(--gbright);transform:translateY(-2px)}
+  .cbtn.done{background:var(--gsoft);color:var(--done);box-shadow:none;cursor:default;border:1px solid #cfe6da}
+  .cbtn.lock{background:#eef1ee;color:#b4bdb6;box-shadow:none;cursor:not-allowed}
+  .cdone{margin-top:36px;background:linear-gradient(135deg,var(--gdeep),var(--gdeep2));color:#fff;border-radius:18px;padding:28px 30px;text-align:center}
+  .cdone .t{font-family:var(--serif);font-size:21px;color:#fff}.cdone .s{font-size:13px;color:#9fc4b1;margin-top:6px}
+  .placeholder{font-size:13px;color:var(--muted);font-style:italic}
+  @media(max-width:780px){.wrap,nav.top .in{padding:0 22px}.ladder,.ctrack{overflow-x:auto}.step,.cstep{min-width:80px}.pbar .msg{margin-left:0}.ocontent,.obar .in{padding-left:22px;padding-right:22px}}
+</style>
+</head>
+<body>
+
+<div id="login">
+  <div class="lbrand"><div class="dots"></div>
+    <svg class="seal" viewBox="0 0 520 520"><circle cx="260" cy="260" r="259"/><circle cx="260" cy="260" r="208"/><circle cx="260" cy="260" r="150"/></svg>
+    <div class="emb"><svg viewBox="0 0 38 38" fill="none"><circle cx="19" cy="19" r="17.5" stroke="#1FB073" stroke-width="1.3"/><path d="M19 9 L27.5 27 L19 22.5 L10.5 27 Z" fill="#1FB073"/></svg><span class="wm">ASXEED<i>.</i></span></div>
+    <div><div class="en">THE&nbsp;ASXEED&nbsp;WAY</div><h2><em>&ldquo;勝ち方&rdquo;</em>を、<br>全員の型に。</h2><p class="bt">新人から一段ずつ。研修を修了し、試験に合格して昇格するほど、次の勝ち方が解放される。</p></div>
+    <div class="bot">OPERATING&nbsp;MANUAL&nbsp;SYSTEM ｜ INTERNAL</div>
+  </div>
+  <div class="lform">
+    <div class="k">SIGN IN</div><h1>社内研修ポータル</h1><div class="lsub">社員名・役職・パスワードを入力してログインしてください。</div>
+    <div class="field"><label>社員名</label><input id="iname" type="text" placeholder="例：村瀬優香" autocomplete="off"></div>
+    <div class="field"><label>役職</label><select id="irole"><option value="新人">新人</option><option value="課員">課員</option><option value="主任">主任</option><option value="課長">課長</option><option value="管理職">管理職</option></select></div>
+    <div class="field"><label>パスワード</label><input id="ipass" type="password" placeholder="パスワード" autocomplete="off"></div>
+    <div class="lerr" id="lerr"></div>
+    <button class="lbtn" onclick="login()">ログイン</button>
+    <div class="lhint">🔑 <b>デモ用ログイン</b>｜社員名：自由入力　役職：プルダウンで選択　パスワード：<b>asxeed</b><br>※ブラウザ単体のデモです。本番はスプレッドシート連携で本人認証・進捗保存を行います。</div>
+  </div>
+</div>
+
+<div id="portal">
+<nav class="top" id="topnav"><div class="in">
+  <div class="logo"><svg viewBox="0 0 30 30" fill="none"><circle cx="15" cy="15" r="13.6" stroke="#1FB073" stroke-width="1.3"/><path d="M15 7 L21.5 21 L15 17.5 L8.5 21 Z" fill="#1FB073"/></svg><span class="wm">ASXEED<i>.</i></span></div>
+  <div class="nuser"><span class="nm" id="navname"></span><span class="rl" id="navrole"></span><button class="out" onclick="logout()">ログアウト</button></div>
+</div></nav>
+<header class="welcome"><div class="bg"></div><div class="dots"></div><div class="in wrap">
+  <div class="k">研修ダッシュボード ／ 昇格ルート</div>
+  <h1><span class="nm" id="wname"></span>さん、ようこそ。</h1>
+  <div class="ladder" id="ladder"></div>
+  <div class="pbar"><svg class="ring" viewBox="0 0 64 64"><circle class="trk" cx="32" cy="32" r="26"/><circle class="fil" id="ringfill" cx="32" cy="32" r="26" transform="rotate(-90 32 32)" stroke-dasharray="163.4" stroke-dashoffset="163.4"/><text class="ringnum" id="ringnum" x="32" y="32" text-anchor="middle" dominant-baseline="central">0</text></svg>
+  <div><div class="v"><span id="pn">0</span> / <span id="pt">0</span> 修了</div><div class="l" id="plabel">研修の進捗</div></div><div class="msg" id="pmsg"></div></div>
+</div></header>
+<section class="lib"><div class="wrap" id="libwrap"></div></section>
+<footer><div class="wrap"><div class="fm">優秀な人を、<em>作り続ける。</em></div><div class="fmeta">ASXEED ｜ OPERATING MANUAL SYSTEM ｜ INTERNAL USE ONLY</div></div></footer>
+</div>
+
+<div class="overlay" id="overlay"><div class="obar"><div class="in"><button class="back" onclick="closeDetail()">← 研修一覧に戻る</button></div></div>
+  <div class="ocontent"><div class="dhead"><h1 id="dttl"></h1><div class="badges" id="dbadges"></div></div><div id="dbody"></div></div>
+</div>
+
+<script>
+const PASS="asxeed";const RANKS=["新人","課員","主任","課長","管理職"];
+const M=[
+ {id:"ch0",t:"ASXEEDの勝ち方（総論）",rank:"新人",lyr:"体系00 なぜ勝てるのか",mode:"learn",owner:"代表",status:"todo"},
+ {id:"newbie",t:"新人研修（マナー・基礎）",rank:"新人",lyr:"横断 前提知識",mode:"learn",owner:"主任",status:"draft"},
+ {id:"ind",t:"通信業界の仕組み",rank:"新人",lyr:"横断 前提知識",mode:"learn",owner:"課長以上",status:"draft"},
+ {id:"def",t:"言葉の定義集",rank:"新人",lyr:"体系01 利益の構造",mode:"learn",owner:"代表",status:"done"},
+ {id:"rules",t:"会社ルール・姿勢のルール",rank:"新人",lyr:"体系05 ASXEEDの文化",mode:"learn",owner:"代表",status:"draft"},
+ {id:"resp",t:"応対の型",rank:"新人",lyr:"体系02 勝ち行動の型",mode:"learn",owner:"主任",status:"done"},
+ {id:"role",t:"40・40・20 役割と利益",rank:"課員",lyr:"体系01 利益の構造",mode:"learn",owner:"代表",status:"draft"},
+ {id:"alog",t:"行動ログ運用",rank:"課員",lyr:"体系03 行動を仕組みに",mode:"run",owner:"管理",status:"done"},
+ {id:"kpi",t:"週次KPI（D.E.C）",rank:"課員",lyr:"体系03 行動を仕組みに",mode:"run",owner:"代表",status:"done"},
+ {id:"murase",t:"村瀬型 勝ち行動（アサイン）",rank:"課員",lyr:"体系02 勝ち行動の型",mode:"run",owner:"村瀬",status:"draft"},
+ {id:"claim",t:"クレーム対応",rank:"課員",lyr:"横断 リスク",mode:"run",owner:"主任",status:"draft"},
+ {id:"road",t:"昇格ロードマップ",rank:"主任",lyr:"体系04 登る道",mode:"learn",owner:"代表",status:"draft"},
+ {id:"eval",t:"評価ルール（成果寄せ・差づけ）",rank:"主任",lyr:"体系03 行動を仕組みに",mode:"learn",owner:"代表",status:"draft"},
+ {id:"bonus",t:"報酬の段差（節目の一時金）",rank:"主任",lyr:"体系04 登る道",mode:"learn",owner:"代表",status:"todo"},
+ {id:"price",t:"単価・条件ルール表",rank:"課長",lyr:"体系01 利益の構造",mode:"learn",owner:"課長以上",status:"done"},
+ {id:"mikuriya",t:"御厨型 案件獲得の型",rank:"課長",lyr:"体系02 勝ち行動の型",mode:"run",owner:"御厨",status:"todo"},
+ {id:"handoff",t:"引き継ぎの型",rank:"課長",lyr:"体系02 勝ち行動の型",mode:"learn",owner:"課長以上",status:"todo"},
+ {id:"mgr",t:"管理職マニュアル",rank:"管理職",lyr:"横断 管理職",mode:"learn",owner:"代表",status:"todo"}];
+const STAT={done:["完成","s-done"],draft:["第一稿/改修","s-draft"],todo:["未着手","s-todo"]};
+const MODE={learn:["習得モード","mode-learn"],run:["運用モード","mode-run"]};
+// 講座の中身（見本：応対の型・村瀬型。他は枠だけ）
+const LESSON={
+ resp:{dur:"4:10",chaps:["導入：応対が成約の8割を決める理由","悪い例 → 良い例：着座直後の第一声","型：アイスブレイク→不満ヒアリング→興味づけ","よくあるNG・Q&A：沈黙された／否定された時","現場カンペの渡し方"],
+   test:"全5問・80点合格（着座後の第一声／不満の引き出し方 ほか）",
+   crib:["① 笑顔で『今日はどのあたり見て回られてました？』","② 今のスマホの不満を “1つだけ” 聞く","③ 『実はそれ、今なら解決できて…』で興味づけ","④ 料金の話は、不満を聞いてから"],
+   action:"今週、着座した全てのお客様に「今の不満を1つ聞く」を実施し、件数を行動ログに記録する"},
+ murase:{dur:"5:00",chaps:["なぜアサインで100万を作れるのか","村瀬さんの実データ（電話60%・5社84%）","型：狩りでなく農業／文字でなく声","専属化のトーク・断られた時の切り返し","週次の必須行動（姿勢のルール）"],
+   test:"全5問・80点合格（5原則／専属化トークの要点）",
+   crib:["① 専属3〜5社と毎週、電話or対面で接触","② 金曜までに翌週ネームを “確定” で回収","③ 専属化：『毎週固定で○名の枠を…読める収益に』","④ 断られたら『どの条件なら出せますか？』"],
+   action:"今週、専属パートナー3社に “電話で” 接触し、翌週の稼働ネームを確定する（行動ログに記録）"}};
+const STEPS=[{k:"video",t:"動画視聴",ic:"📺"},{k:"test",t:"確認テスト",ic:"✅"},{k:"crib",t:"カンペ確認",ic:"🗂"},{k:"action",t:"今週の1アクション",ic:"🎯"},{k:"approve",t:"上長承認",ic:"🤝"}];
+const SBTN={video:"視聴を完了する",test:"テストを受ける（合格）",crib:"カンペを確認した",action:"行動ログに記録した",approve:"承認する（デモ）"};
+
+let CU=null,read={},steps={},currentIdx=0,viewedIdx=0,flash="",curM=null;const CIRC=2*Math.PI*26;
+const $=id=>document.getElementById(id);
+addEventListener('scroll',()=>$('topnav')&&$('topnav').classList.toggle('scr',scrollY>30));
+$('ipass').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
+function rankManuals(r){return M.filter(m=>m.rank===r)}
+function rankDone(r){return rankManuals(r).every(m=>read[m.id])}
+function cs(id){return steps[id]||(steps[id]={video:0,test:0,crib:0,action:0,approve:0})}
+
+function login(){const n=$('iname').value.trim(),p=$('ipass').value,r=$('irole').value;
+ if(!n){$('lerr').textContent='社員名を入力してください';return;}
+ if(p!==PASS){$('lerr').textContent='パスワードが違います（デモ：asxeed）';return;}
+ CU={name:n,rank:r};currentIdx=RANKS.indexOf(r);viewedIdx=currentIdx;read={};steps={};flash="";
+ $('login').style.display='none';$('portal').style.display='block';
+ $('navname').textContent=n;$('navrole').textContent=r;$('wname').textContent=n;render();window.scrollTo(0,0);}
+function logout(){CU=null;$('portal').style.display='none';$('login').style.display='flex';$('iname').value='';$('ipass').value='';$('lerr').textContent='';}
+
+function render(){renderLadder();renderLib();updateBar();}
+function renderLadder(){const L=$('ladder');L.innerHTML='';
+ RANKS.forEach((r,i)=>{const st=i<currentIdx?'done':(i===currentIdx?'current':'locked'),unlocked=i<=currentIdx;
+  const d=document.createElement('div');d.className='step '+st+(unlocked?' unlocked':'')+(i===viewedIdx?' viewed':'');
+  d.innerHTML=`<div class="dot">${i<currentIdx?'✓':(st==='locked'?'🔒':(i+1))}</div><div class="lbl">${r}</div><div class="stt">${i<currentIdx?'修了':(i===currentIdx?'現在':'ロック')}</div>`;
+  if(unlocked)d.onclick=()=>{viewedIdx=i;render();};L.appendChild(d);});}
+function renderLib(){const w=$('libwrap');w.innerHTML='';const r=RANKS[viewedIdx];
+ if(viewedIdx>currentIdx){w.innerHTML='<div class="lockmsg">🔒 この役職の研修はまだ解放されていません。手前の研修を修了し、昇格すると解放されます。</div>';return;}
+ if(flash){const f=document.createElement('div');f.className='flash';f.innerHTML=`<span class="ic">✓</span><span>${flash}</span>`;w.appendChild(f);}
+ const h=document.createElement('div');h.className='secttl';h.innerHTML=`${r} の研修カリキュラム <span class="badge">${rankManuals(r).length} 講座</span>`;w.appendChild(h);
+ const grid=document.createElement('div');grid.className='grid';
+ rankManuals(r).forEach(m=>{const st=STAT[m.status],md=MODE[m.mode],dn=read[m.id];
+  const c=document.createElement('div');c.className='mcard'+(dn?' dn':'');
+  c.innerHTML=`<div class="lyr">${m.lyr}</div><div class="mt">${m.t}</div><div class="badges"><span class="b ${md[1]}">${md[0]}</span><span class="b ${st[1]}">${st[0]}</span></div><div class="meta"><span>OWNER／${m.owner}</span>${dn?'<span class="read">✓ 修了</span>':''}</div>`;
+  c.onclick=()=>openDetail(m);grid.appendChild(c);});
+ w.appendChild(grid);
+ if(viewedIdx===currentIdx&&rankDone(r)&&currentIdx<RANKS.length-1){const nx=RANKS[currentIdx+1],exam=currentIdx>=1;
+  const a=document.createElement('div');a.className='advance';
+  a.innerHTML=`<div class="dots"></div><div><div class="at">🎓 ${r}研修を修了しました</div><div class="as">${exam?`「${nx}試験」に合格すると、${nx}の研修が解放されます。`:`次は ${nx} の研修に進めます。`}（本番では確認テスト・上長承認で合否判定）</div></div><button onclick="advance()">${exam?`${nx}試験を受ける →`:`${nx}へ進む →`}</button>`;
+  w.appendChild(a);}}
+function advance(){const nx=RANKS[currentIdx+1];currentIdx++;viewedIdx=currentIdx;
+ flash=`おめでとうございます。${nx} に昇格しました。${nx} の研修が解放されました。`;render();window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>{flash="";renderLib();},6000);}
+function updateBar(){const r=RANKS[viewedIdx];
+ if(viewedIdx>currentIdx){$('pmsg').innerHTML='';$('plabel').textContent='ロック中';$('pn').textContent=0;$('pt').textContent=rankManuals(r).length;$('ringnum').textContent=0;$('ringfill').style.strokeDashoffset=CIRC;return;}
+ const ms=rankManuals(r),done=ms.filter(m=>read[m.id]).length;
+ $('pn').textContent=done;$('pt').textContent=ms.length;$('ringnum').textContent=done;$('ringfill').style.strokeDashoffset=CIRC*(1-done/ms.length);$('plabel').textContent=`${r}研修の進捗`;
+ let msg;if(viewedIdx<currentIdx)msg='<b>修了済み</b>の研修です。いつでも復習できます。';
+ else if(done===ms.length)msg=currentIdx<RANKS.length-1?'全講座を修了！ <b>昇格試験</b>に進めます。':'最高位まで<b>すべて修了</b>しました。';
+ else msg='講座をタップして受講しましょう。<b>すべて修了</b>すると昇格試験が解放されます。';$('pmsg').innerHTML=msg;}
+
+/* ===== 講座ページ（1講座の理想形） ===== */
+function openDetail(m){curM=m;const s=cs(m.id),st=STAT[m.status],md=MODE[m.mode];
+ const order=STEPS.map(x=>x.k),curStep=order.findIndex(k=>!s[k]);
+ $('dttl').textContent=m.t;
+ $('dbadges').innerHTML=`<span class="b ${md[1]}">${md[0]}</span><span class="b ${st[1]}">${st[0]}</span><span class="b s-todo">OWNER／${m.owner}</span>`;
+ // tracker
+ let html='<div class="ctrack">'+STEPS.map((x,i)=>{const dn=s[x.k],cur=i===curStep;return `<div class="cstep ${dn?'dn':(cur?'cur':'')}"><div class="cd">${dn?'✓':x.ic}</div><div class="cl">${x.t}</div></div>`;}).join('')+'</div>';
+ const Ls=LESSON[m.id],isSample=!!Ls,L=Ls||{dur:"—:—",chaps:["導入（なぜ大事か）","悪い例 → 良い例","型・手順","よくあるNG・Q&A","現場カンペの渡し方"],test:"全5問・80点合格",crib:["（現場で使う型を、ここに3〜5項目で）"],action:"（今週やる具体行動を1つ。行動ログに記録できる形で）"};
+ if(!isSample)html+=`<p class="placeholder" style="margin-top:22px">この講座は枠組み（テンプレート）です。下の各セクションに、御社で内容を入れていきます。</p>`;
+ // section builder
+ const sec=(i,inner)=>{const x=STEPS[i],dn=s[x.k],cur=i===curStep,lock=i>curStep;
+  let btn;if(dn)btn=`<button class="cbtn done">✓ 完了</button>`;else if(cur)btn=`<button class="cbtn" onclick="cstep('${x.k}')">${SBTN[x.k]} →</button>`;else btn=`<button class="cbtn lock" disabled>🔒 前のステップを完了してください</button>`;
+  return `<div class="csec ${lock?'locked':''}"><div class="ch"><span class="cn">0${i+1}</span><span class="ct">${x.ic} ${x.t}</span><span class="ctag">${x.k==='video'?'STEP':'STEP'}</span></div>${inner}${btn}</div>`;};
+ html+=sec(0,`<div class="videoframe"><div class="dots"></div><div class="play"></div><span class="dur">▶ ${L.dur}</span></div><ul class="chaps">${L.chaps.map(c=>`<li>${c}</li>`).join('')}</ul><div class="note">3〜5分の動画。導入→悪い例/良い例→型→NG→カンペ渡し の構成。</div>`);
+ html+=sec(1,`<div class="abox">${L.test}</div><div class="note">80点未満は再受験。点数はスプレッドシートに記録（自己申告でない）。</div>`);
+ html+=sec(2,`<div class="cribcard"><div class="crh"><span>ASXEED 現場カンペ</span><span>${m.t} ／ A5</span></div><ul>${L.crib.map(c=>`<li>${c}</li>`).join('')}</ul></div><div class="note">印刷してラミネート。現場でポケットに入れて使う。</div>`);
+ html+=sec(3,`<div class="abox">🎯 <b>今週やること：</b>${L.action}</div><div class="note">「知って終わり」を防ぐ要。これが行動ログ→週次KPIに直結する。</div>`);
+ html+=sec(4,`<div class="abox">現場責任者（上長）が実施を確認し、承認する。<b>本人の自己申告では修了にならない</b>のが識学の肝。</div>`);
+ if(read[m.id])html+=`<div class="cdone"><div class="t">🎓 この講座を修了しました</div><div class="s">昇格ルートの進捗に反映されました。一覧に戻って次の講座へ。</div></div>`;
+ $('dbody').innerHTML=html;
+ const ov=$('overlay');ov.classList.add('open');ov.scrollTop=0;document.body.style.overflow='hidden';}
+function cstep(k){const s=cs(curM.id);s[k]=1;if(STEPS.every(x=>s[x.k]))read[curM.id]=true;openDetail(curM);render();}
+function closeDetail(){$('overlay').classList.remove('open');document.body.style.overflow='';}
+</script>
+</body>
+</html>
